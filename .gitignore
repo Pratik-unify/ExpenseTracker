@@ -1,0 +1,7 @@
+# Ignore environment variables containing passwords
+.env
+
+# Ignore heavy frontend and backend dependencies
+node_modules/
+dist/
+.DS_Store
