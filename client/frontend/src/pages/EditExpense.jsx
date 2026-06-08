@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 export default function EditExpense({ navigateTo, id }) {
   const [formData, setFormData] = useState({ name: "", amount: "", type: "Food", date: "" });
   const [loading, setLoading] = useState(true);
@@ -8,7 +10,7 @@ export default function EditExpense({ navigateTo, id }) {
   useEffect(() => {
     const fetchSingleExpense = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/expenses/${id}`);
+        const response = await fetch(`${API_URL}/expenses/${id}`);
         if (!response.ok) throw new Error("Failed to fetch specific item");
         
         const data = await response.json();
@@ -33,7 +35,7 @@ export default function EditExpense({ navigateTo, id }) {
   const handleSubmit = async () => {
     // e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:5000/expenses/${id}`, {
+      const response = await fetch(`${API_URL}/expenses/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"

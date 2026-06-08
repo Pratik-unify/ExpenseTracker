@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 export default function Dashboard({ navigateTo }) {
   const [expenses, setExpenses] = useState([]);
   
@@ -15,7 +17,7 @@ export default function Dashboard({ navigateTo }) {
   // Fetch using native GET
   const fetchExpenses = async () => {
     try {
-      const response = await fetch("http://localhost:5000/expenses");
+      const response = await fetch(`${API_URL}/expenses`);
       if (!response.ok) throw new Error("Failed to fetch data");
       
       const data = await response.json();
@@ -33,7 +35,7 @@ export default function Dashboard({ navigateTo }) {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this?")) {
       try {
-        const response = await fetch(`http://localhost:5000/expenses/${id}`, {
+        const response = await fetch(`${API_URL}/expenses/${id}`, {
           method: "DELETE"
         });
         if (!response.ok) throw new Error("Failed to delete");
@@ -65,7 +67,7 @@ export default function Dashboard({ navigateTo }) {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/expenses", {
+      const response = await fetch(`${API_URL}/expenses`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

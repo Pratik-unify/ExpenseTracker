@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 export default function AddExpense({ navigateTo }) {
   const [formData, setFormData] = useState({ name: "", amount: "", type: "Food", date: "" });
   const [error, setError] = useState("");
@@ -19,7 +21,7 @@ export default function AddExpense({ navigateTo }) {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/expenses", {
+      const response = await fetch(`${API_URL}/expenses`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
