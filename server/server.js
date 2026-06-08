@@ -1,8 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import "dotenv/config"; 
-import Expense from "./models/expense.js"; 
+import "dotenv/config";
+import Expense from "./models/expense.js";
 
 
 const app = express();
@@ -31,7 +31,7 @@ app.post("/expenses", async (req, res) => {
     if (!amount || Number(amount) <= 0) {
       return res.status(400).json({ error: "Amount must be greater than 0" });
     }
-    
+
     // Check if the date is in the future
     const inputDate = new Date(date);
     const today = new Date();
@@ -41,7 +41,7 @@ app.post("/expenses", async (req, res) => {
 
     const newExpense = new Expense({ name, amount, type, date });
     await newExpense.save();
-    
+
     res.status(201).json(newExpense);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -54,7 +54,7 @@ app.post("/expenses", async (req, res) => {
 app.get("/expenses", async (req, res) => {
   try {
     // Fetch all expenses, sorting by newest date first as preferred by UX spec
-    const expenses = await Expense.find().sort({ date: -1 });
+    const expenses = await Expense.find().sort({ date: -1, createdAt: -1 });
     res.status(200).json(expenses);
   } catch (error) {
     res.status(500).json({ error: "Server error while fetching expenses" });

@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 export default function Dashboard({ navigateTo }) {
   const [expenses, setExpenses] = useState([]);
-  
+
   // Embedded Form States
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
@@ -19,7 +19,7 @@ export default function Dashboard({ navigateTo }) {
     try {
       const response = await fetch(`${API_URL}/expenses`);
       if (!response.ok) throw new Error("Failed to fetch data");
-      
+
       const data = await response.json();
       setExpenses(data);
     } catch (error) {
@@ -39,7 +39,7 @@ export default function Dashboard({ navigateTo }) {
           method: "DELETE"
         });
         if (!response.ok) throw new Error("Failed to delete");
-        
+
         fetchExpenses(); // Refresh list after delete
       } catch (e) {
         alert("Could not delete item.");
@@ -75,14 +75,14 @@ export default function Dashboard({ navigateTo }) {
         body: JSON.stringify({ name, amount: Number(amount), type, date })
       });
       if (!response.ok) throw new Error("Failed to save");
-      
+
       // Clear form
       setName("");
       setAmount("");
       setType("Food");
       setDate("");
       setError("");
-      
+
       // Refresh list
       fetchExpenses();
     } catch (error) {
@@ -117,7 +117,7 @@ export default function Dashboard({ navigateTo }) {
     return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
   });
   const thisMonthSpent = thisMonthExpenses.reduce((sum, item) => sum + Number(item.amount), 0);
-  
+
   const budget = 15000;
   const percentUsed = Math.min(100, Math.round((thisMonthSpent / budget) * 100));
 
@@ -199,7 +199,7 @@ export default function Dashboard({ navigateTo }) {
     if (type === "Bills") return "bg-[#a4751f]/10 text-[#a4751f]";
     return "bg-[#7a766c]/10 text-[#7a766c]";
   };
-
+  console.log(expenses);
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center border-b border-brand-border pb-4 mb-6">
@@ -209,8 +209,8 @@ export default function Dashboard({ navigateTo }) {
           </div>
           <span className="font-sans text-[20px] font-bold text-[#1a1c22]">Expense Tracker</span>
         </div>
-        <button 
-          onClick={handleAddClick} 
+        <button
+          onClick={handleAddClick}
           className="font-mono text-[13px] font-semibold text-white bg-[#2f6f4f] hover:bg-opacity-95 px-[17px] py-[11px] rounded-[7px] cursor-pointer transition-all active:scale-[0.98]"
         >
           + Add expense
@@ -235,8 +235,8 @@ export default function Dashboard({ navigateTo }) {
               </h2>
               <div>
                 <div className="w-full bg-[#efece4] h-[7px] rounded-full overflow-hidden mt-3">
-                  <div 
-                    className="bg-[#2f6f4f] h-full rounded-full transition-all duration-500" 
+                  <div
+                    className="bg-[#2f6f4f] h-full rounded-full transition-all duration-500"
                     style={{ width: `${percentUsed}%` }}
                   />
                 </div>
@@ -288,15 +288,15 @@ export default function Dashboard({ navigateTo }) {
             ) : (
               <div className="space-y-2.5">
                 {expenses.map((expense) => (
-                  <div 
-                    key={expense._id} 
+                  <div
+                    key={expense._id}
                     className="bg-white border border-brand-border/85 rounded-[9px] p-[13px] sm:p-[14px] flex items-center justify-between shadow-xs transition-colors hover:border-[#2f6f4f]/30"
                   >
                     <div className="flex flex-col gap-1.5">
                       <div className="flex items-center gap-2.5">
                         <span className="font-sans text-[14px] font-semibold text-brand-ink leading-none">
                           {expense.name}
-                        </span> 
+                        </span>
                         <span className={`font-mono text-[9.5px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-[4px] leading-none ${getChipStyle(expense.type)}`}>
                           {expense.type}
                         </span>
@@ -305,20 +305,20 @@ export default function Dashboard({ navigateTo }) {
                         {formatDate(expense.date)}
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-5">
                       <div className="font-mono text-[15px] font-semibold text-brand-ink">
                         {formatRupees(expense.amount)}
                       </div>
                       <div className="flex items-center gap-2">
-                        <button 
-                          onClick={() => navigateTo("edit", expense._id)} 
+                        <button
+                          onClick={() => navigateTo("edit", expense._id)}
                           className="font-mono text-[11px] border border-brand-border px-[9px] py-[5px] rounded-[6px] text-brand-muted hover:text-brand-ink hover:border-brand-border transition-colors cursor-pointer"
                         >
                           Edit
                         </button>
-                        <button 
-                          onClick={() => handleDelete(expense._id)} 
+                        <button
+                          onClick={() => handleDelete(expense._id)}
                           className="font-mono text-[11px] border border-brand-border px-[9px] py-[5px] rounded-[6px] text-brand-muted hover:text-[#b4452f] hover:border-[#b4452f]/30 transition-colors cursor-pointer"
                         >
                           Delete
@@ -338,34 +338,34 @@ export default function Dashboard({ navigateTo }) {
             <form onSubmit={handleAddSubmit} className="space-y-4">
               <div className="flex flex-col">
                 <label className="font-mono text-[9.5px] font-semibold tracking-[0.6px] uppercase text-brand-muted mb-1.5">Name</label>
-                <input 
+                <input
                   ref={nameInputRef}
-                  type="text" 
+                  type="text"
                   value={name}
-                  required 
+                  required
                   placeholder="What was it for?"
                   className="w-full border border-brand-border rounded-[7px] px-[11px] py-[9px] text-[13px] text-brand-ink bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent transition-all font-medium"
-                  onChange={(e) => setName(e.target.value)} 
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col">
                   <label className="font-mono text-[9.5px] font-semibold tracking-[0.6px] uppercase text-brand-muted mb-1.5">Amount</label>
-                  <input 
-                    type="number" 
-                    step="0.01" 
+                  <input
+                    type="number"
+                    step="0.01"
                     value={amount}
-                    required 
+                    required
                     placeholder="0.00"
                     className="w-full border border-brand-border rounded-[7px] px-[11px] py-[9px] text-[13px] text-brand-ink bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent transition-all font-medium"
-                    onChange={(e) => setAmount(e.target.value)} 
+                    onChange={(e) => setAmount(e.target.value)}
                   />
                 </div>
 
                 <div className="flex flex-col">
                   <label className="font-mono text-[9.5px] font-semibold tracking-[0.6px] uppercase text-brand-muted mb-1.5">Type</label>
-                  <select 
+                  <select
                     value={type}
                     className="w-full border border-brand-border rounded-[7px] px-[11px] py-[9px] text-[13px] text-brand-ink bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent transition-all font-medium cursor-pointer"
                     onChange={(e) => setType(e.target.value)}
@@ -380,12 +380,12 @@ export default function Dashboard({ navigateTo }) {
 
               <div className="flex flex-col">
                 <label className="font-mono text-[9.5px] font-semibold tracking-[0.6px] uppercase text-brand-muted mb-1.5">Date</label>
-                <input 
-                  type="date" 
+                <input
+                  type="date"
                   value={date}
-                  required 
+                  required
                   className="w-full border border-brand-border rounded-[7px] px-[11px] py-[9px] text-[13px] text-brand-ink bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent transition-all font-mono cursor-pointer"
-                  onChange={(e) => setDate(e.target.value)} 
+                  onChange={(e) => setDate(e.target.value)}
                 />
               </div>
 
@@ -396,13 +396,13 @@ export default function Dashboard({ navigateTo }) {
               )}
 
               <div className="flex flex-col gap-2 pt-2">
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="font-mono text-[13px] font-semibold text-white bg-[#2f6f4f] hover:bg-opacity-95 px-[17px] py-[11px] rounded-[7px] cursor-pointer text-center w-full transition-all active:scale-[0.99]"
                 >
                   Save expense
                 </button>
-                <button 
+                <button
                   type="button"
                   onClick={handleClearForm}
                   className="font-mono text-[13px] font-semibold text-brand-ink bg-white hover:bg-brand-bg border border-brand-ink px-[17px] py-[11px] rounded-[7px] cursor-pointer text-center w-full transition-all active:scale-[0.99]"
