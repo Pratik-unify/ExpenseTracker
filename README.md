@@ -50,10 +50,28 @@ ExpenseTracker/
 
 ## 🏃 Setup and Run Instructions
 
-### 1. Prerequisite
-Ensure you have **Node.js** and **MongoDB** installed and running on your local machine.
+Make sure you have [Node.js](https://nodejs.org/) installed. The server is configured to connect to MongoDB Atlas via the URI in `server/.env`.
 
-### 2. Run the Backend Server
+### Option A: The One-Command Way (Recommended)
+You can install dependencies and run both servers from the root workspace directory:
+
+1. **Install all dependencies** (for both server and client):
+   ```bash
+   npm run install:all
+   ```
+2. **Start both servers concurrently**:
+   ```bash
+   npm run dev
+   ```
+   *This starts the Express server (port `5000`) and Vite development server (port `5173`) in parallel.*
+
+---
+
+### Option B: The Manual Way (Separate Terminals)
+
+If you prefer running the servers in separate terminal sessions:
+
+#### 1. Run the Backend Server
 1. Navigate to the server folder:
    ```bash
    cd server
@@ -62,14 +80,13 @@ Ensure you have **Node.js** and **MongoDB** installed and running on your local 
    ```bash
    npm install
    ```
-3. Set up your MongoDB connection URI in a `.env` file (if you have one, or configure local mongo connection).
-4. Launch the server:
+3. Launch the server:
    ```bash
-   node server.js
+   npm start
    ```
    *The server runs at `http://localhost:5000`.*
 
-### 3. Run the Frontend Client
+#### 2. Run the Frontend Client
 1. In a new terminal window, navigate to the frontend directory:
    ```bash
    cd client/frontend

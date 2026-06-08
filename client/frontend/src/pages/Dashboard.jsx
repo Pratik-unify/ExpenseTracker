@@ -137,7 +137,7 @@ export default function Dashboard({ navigateTo }) {
   const renderDonutSlices = () => {
     if (expenses.length === 0) {
       return (
-        <circle cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#efece4" strokeWidth="5" />
+        <circle cx="19" cy="19" r="15.91549430918954" fill="transparent" stroke="#efece4" strokeWidth="5" />
       );
     }
 
@@ -164,8 +164,8 @@ export default function Dashboard({ navigateTo }) {
     return slices.map((slice, index) => (
       <circle
         key={index}
-        cx="18"
-        cy="18"
+        cx="19"
+        cy="19"
         r="15.91549430918954"
         fill="transparent"
         stroke={slice.color}
@@ -250,7 +250,7 @@ export default function Dashboard({ navigateTo }) {
               <span className="font-mono text-[10.5px] uppercase tracking-[0.8px] text-brand-muted mb-2">By Category</span>
               <div className="flex items-center gap-4">
                 <div className="relative w-[74px] h-[74px] shrink-0">
-                  <svg viewBox="0 0 36 36" className="w-[74px] h-[74px] rotate-[-90deg]">
+                  <svg viewBox="0 0 38 38" className="w-[74px] h-[74px] p-2 rotate-[-90deg]">
                     {renderDonutSlices()}
                   </svg>
                 </div>

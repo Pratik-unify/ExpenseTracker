@@ -31,7 +31,7 @@ export default function AddExpense({ navigateTo }) {
 
       if (!response.ok) throw new Error("Failed to save");
       
-      navigateTo("dashboard"); // Go back on success
+      navigateTo("dashboard");
     } catch (error) {
       alert("Failed to save.");
     }

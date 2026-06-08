@@ -42,7 +42,7 @@ app.post("/expenses", async (req, res) => {
     const newExpense = new Expense({ name, amount, type, date });
     await newExpense.save();
     
-    res.status(201).json(newExpense); // 201 Created
+    res.status(201).json(newExpense);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
