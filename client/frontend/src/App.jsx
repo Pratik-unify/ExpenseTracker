@@ -12,13 +12,14 @@ export default function App() {
     setPage(page);
     setId(id);
   }
-  const containerStyle = { maxWidth: "800px", margin: "0 auto", padding: "20px" };
 
   return (
-    <div style={containerStyle}>
-      {page === "dashboard" && <Dashboard navigateTo={navigateTo} />}
-      {page === "add" && <AddExpense navigateTo={navigateTo} />}
-      {page === "edit" && <EditExpense navigateTo={navigateTo} id={id} />}
+    <div className="min-h-screen bg-brand-bg text-brand-ink font-sans selection:bg-brand-accent/20">
+      <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
+        {page === "dashboard" && <Dashboard navigateTo={navigateTo} />}
+        {page === "add" && <AddExpense navigateTo={navigateTo} />}
+        {page === "edit" && <EditExpense navigateTo={navigateTo} id={id} />}
+      </div>
     </div>
   );
 }

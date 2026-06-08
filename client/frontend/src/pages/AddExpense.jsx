@@ -2,9 +2,22 @@ import { useState } from "react";
 
 export default function AddExpense({ navigateTo }) {
   const [formData, setFormData] = useState({ name: "", amount: "", type: "Food", date: "" });
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
+    // Validate future date
+    const selectedDate = new Date(formData.date);
+    selectedDate.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (selectedDate > today) {
+      setError("Cannot add a future date");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:5000/expenses", {
         method: "POST",
@@ -23,26 +36,47 @@ export default function AddExpense({ navigateTo }) {
   };
 
   return (
-    <div style={{ border: "1px solid black", padding: "20px", marginTop: "20px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h2>Add Expense</h2>
-        <button onClick={() => navigateTo("dashboard")}>Cancel</button>
+    <div className="bg-brand-card border border-brand-border rounded-lg p-5">
+      <div className="flex justify-between items-center border-b border-brand-border pb-3 mb-4">
+        <h2 className="text-lg font-bold text-brand-ink">Add Expense</h2>
+        <button 
+          onClick={() => navigateTo("dashboard")}
+          className="text-brand-muted hover:text-brand-ink text-xs font-bold cursor-pointer"
+        >
+          Cancel
+        </button>
       </div>
 
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px", marginTop: "20px" }}>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <label>Name</label>
-          <input type="text" required onChange={(e) => setFormData({...formData, name: e.target.value})} />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="flex flex-col">
+          <label className="text-xs font-bold text-brand-ink mb-1">Name</label>
+          <input 
+            type="text" 
+            required 
+            placeholder="e.g. Groceries"
+            className="w-full border border-brand-border rounded-md px-3 py-1.5 bg-brand-card text-brand-ink text-sm font-medium focus:outline-hidden focus:ring-1 focus:ring-brand-accent focus:border-brand-accent"
+            onChange={(e) => setFormData({...formData, name: e.target.value})} 
+          />
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <label>Amount</label>
-          <input type="number" step="0.01" required onChange={(e) => setFormData({...formData, amount: e.target.value})} />
+        <div className="flex flex-col">
+          <label className="text-xs font-bold text-brand-ink mb-1">Amount</label>
+          <input 
+            type="number" 
+            step="0.01" 
+            required 
+            placeholder="0.00"
+            className="w-full border border-brand-border rounded-md px-3 py-1.5 bg-brand-card text-brand-ink text-sm font-medium focus:outline-hidden focus:ring-1 focus:ring-brand-accent focus:border-brand-accent"
+            onChange={(e) => setFormData({...formData, amount: e.target.value})} 
+          />
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <label>Type</label>
-          <select onChange={(e) => setFormData({...formData, type: e.target.value})}>
+        <div className="flex flex-col">
+          <label className="text-xs font-bold text-brand-ink mb-1">Type</label>
+          <select 
+            className="w-full border border-brand-border rounded-md px-3 py-1.5 bg-brand-card text-brand-ink text-sm font-medium focus:outline-hidden focus:ring-1 focus:ring-brand-accent focus:border-brand-accent cursor-pointer"
+            onChange={(e) => setFormData({...formData, type: e.target.value})}
+          >
             <option value="Food">Food</option>
             <option value="Travel">Travel</option>
             <option value="Bills">Bills</option>
@@ -50,12 +84,28 @@ export default function AddExpense({ navigateTo }) {
           </select>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <label>Date</label>
-          <input type="date" required onChange={(e) => setFormData({...formData, date: e.target.value})} />
+        <div className="flex flex-col">
+          <label className="text-xs font-bold text-brand-ink mb-1">Date</label>
+          <input 
+            type="date" 
+            required 
+            className="w-full border border-brand-border rounded-md px-3 py-1.5 bg-brand-card text-brand-ink text-sm font-medium focus:outline-hidden focus:ring-1 focus:ring-brand-accent focus:border-brand-accent cursor-pointer"
+            onChange={(e) => setFormData({...formData, date: e.target.value})} 
+          />
         </div>
 
-        <button type="submit" style={{ padding: "10px", marginTop: "10px" }}>Save Expense</button>
+        {error && (
+          <div className="text-xs font-bold text-[#b4452f] text-center mt-1">
+            {error}
+          </div>
+        )}
+
+        <button 
+          type="submit" 
+          className="w-full bg-brand-accent hover:bg-opacity-90 text-brand-card font-bold rounded-md py-2.5 text-sm cursor-pointer mt-2"
+        >
+          Save Expense
+        </button>
       </form>
     </div>
   );
