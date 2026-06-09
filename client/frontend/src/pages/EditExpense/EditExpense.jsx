@@ -1,55 +1,9 @@
-import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import useEditExpense from "./useEditExpense";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-
-export default function EditExpense({ navigateTo, id }) {
-  const [formData, setFormData] = useState({ name: "", amount: "", type: "Food", date: "" });
-  const [loading, setLoading] = useState(true);
-
-  // 1. Fetch the existing data to pre-fill the form
-  useEffect(() => {
-    const fetchSingleExpense = async () => {
-      try {
-        const response = await fetch(`${API_URL}/expenses/${id}`);
-        if (!response.ok) throw new Error("Failed to fetch specific item");
-        
-        const data = await response.json();
-        
-        const formattedDate = data.date.split("T")[0]; 
-        
-        setFormData({
-          name: data.name,
-          amount: data.amount,
-          type: data.type,
-          date: formattedDate
-        });
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching expense", error);
-      }
-    };
-    fetchSingleExpense();
-  }, [id]);
-
-  // 2. PUT the updated data back to the server
-  const handleSubmit = async () => {
-    // e.preventDefault();
-    try {
-      const response = await fetch(`${API_URL}/expenses/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
-      });
-
-      if (!response.ok) throw new Error("Failed to update");
-      
-      navigateTo("dashboard");
-    } catch (error) {
-      alert("Failed to update.");
-    }
-  };
+export default function EditExpense() {
+  const navigate = useNavigate();
+  const { formData, setFormData, loading, handleSubmit } = useEditExpense();
 
   if (loading) {
     return <div className="text-sm font-semibold text-brand-muted py-8 text-center">Loading details...</div>;
@@ -60,7 +14,7 @@ export default function EditExpense({ navigateTo, id }) {
       <div className="flex justify-between items-center border-b border-brand-border pb-3 mb-4">
         <h2 className="text-lg font-bold text-brand-ink">Edit Expense</h2>
         <button 
-          onClick={() => navigateTo("dashboard")}
+          onClick={() => navigate("/")}
           className="text-brand-muted hover:text-brand-ink text-xs font-bold cursor-pointer"
         >
           Cancel

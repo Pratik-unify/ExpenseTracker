@@ -1,48 +1,16 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useAddExpense from "./useAddExpense";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-
-export default function AddExpense({ navigateTo }) {
-  const [formData, setFormData] = useState({ name: "", amount: "", type: "Food", date: "" });
-  const [error, setError] = useState("");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    // Validate future date
-    const selectedDate = new Date(formData.date);
-    selectedDate.setHours(0, 0, 0, 0);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    if (selectedDate > today) {
-      setError("Cannot add a future date");
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_URL}/expenses`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
-      });
-
-      if (!response.ok) throw new Error("Failed to save");
-      
-      navigateTo("dashboard");
-    } catch (error) {
-      alert("Failed to save.");
-    }
-  };
+export default function AddExpense() {
+  const navigate = useNavigate();
+  const { formData, setFormData, error, handleSubmit } = useAddExpense();
 
   return (
     <div className="bg-brand-card border border-brand-border rounded-lg p-5">
       <div className="flex justify-between items-center border-b border-brand-border pb-3 mb-4">
         <h2 className="text-lg font-bold text-brand-ink">Add Expense</h2>
         <button 
-          onClick={() => navigateTo("dashboard")}
+          onClick={() => navigate("/")}
           className="text-brand-muted hover:text-brand-ink text-xs font-bold cursor-pointer"
         >
           Cancel
