@@ -9,8 +9,10 @@ A modern, simple, and clean personal expense tracking application built using th
 * **Visual Analytics**: Interactive native SVG donut chart summarizing expense distribution by category (Food, Bills, Travel, etc.).
 * **Budget Tracking**: Live progress bar tracking monthly expenditures against a target budget of ₹15,000.
 * **Modern Interface**: Designed using custom brand typography (IBM Plex) and a warm color scheme.
-* **Inline Form Submission**: Add new expenses instantly from the dashboard or navigate to a dedicated form.
-* **Validation**: Restricts entry of future transaction dates with clear UI warning messages.
+* **Single Responsibility Components**: Monolithic pages are broken down into small, loosely coupled UI elements (Form, List, Header, Stats).
+* **Stateful Custom Hooks**: Decouples presentation markup from state and calculations using custom hooks (`useDashboard`, `useAddExpense`, `useEditExpense`).
+* **Client-Side Routing**: Handled cleanly with React Router (v7) supporting dynamic routes (`/edit/:id` and `/add`).
+* **Strict Numeric Validation**: Custom regex pattern validation (`/^\d*\.?\d*$/`) prevents the entry of negative signs, mathematical symbols, or letters inside the amount fields, with instant warnings.
 
 ---
 
@@ -18,8 +20,9 @@ A modern, simple, and clean personal expense tracking application built using th
 
 ### Frontend (`/client/frontend`)
 * **React 19** & **Vite 8**
+* **React Router v7** (`react-router-dom`)
 * **Tailwind CSS v4** (CSS-first config with `@theme` variables)
-* **IBM Plex** typography
+* **Custom React Hooks** (`useCallback`, `useMemo`, and custom state hook containers)
 
 ### Backend (`/server`)
 * **Node.js** & **Express**
@@ -30,19 +33,35 @@ A modern, simple, and clean personal expense tracking application built using th
 
 ## 📁 Project Structure
 
+All page-level logic, states, and operations are kept self-contained within their respective subdirectory under `pages/`, eliminating separate utility folders for loose coupling.
+
 ```text
 ExpenseTracker/
 ├── client/
-│   └── frontend/          # Vite + React Frontend
+│   └── frontend/
 │       ├── src/
-│       │   ├── pages/     # Dashboard, Add, and Edit forms
-│       │   ├── App.jsx    # State-based view router
-│       │   └── index.css  # Tailwind v4 import & custom theme variables
+│       │   ├── pages/               # Self-contained page folders
+│       │   │   ├── Dashboard/       # Dashboard Module
+│       │   │   │   ├── Dashboard.jsx        # Layout Coordinator (44 lines)
+│       │   │   │   ├── useDashboard.js      # Stateful Hook (API fetches, ref, stats)
+│       │   │   │   ├── DashboardHeader.jsx  # Page banner
+│       │   │   │   ├── StatsOverview.jsx    # Metric indicators grid
+│       │   │   │   ├── DonutChart.jsx       # SVG chart calculations
+│       │   │   │   ├── ExpenseList.jsx      # List rows & loader skeletons
+│       │   │   │   └── ExpenseForm.jsx      # Add form (encapsulated typing state)
+│       │   │   │
+│       │   │   ├── AddExpense/      # Standalone Add Page
+│       │   │   │   ├── AddExpense.jsx       # Form presentation
+│       │   │   │   └── useAddExpense.js     # Form hook (validation & save)
+│       │   │   │
+│       │   │   └── EditExpense/     # Standalone Edit Page
+│       │   │       ├── EditExpense.jsx      # Form presentation
+│       │   │       └── useEditExpense.js    # Form hook (params load & update)
+│       │   │
+│       │   ├── App.jsx              # React Router Navigation Router
+│       │   └── index.css            # Tailwind CSS v4 and typography setup
 │       └── index.html
-├── server/                # Node.js + Express Backend
-│   ├── models/            # MongoDB schemas
-│   ├── server.js          # API Server entry point
-│   └── .env               # Database connection keys
+├── server/                          # Node.js + Express Backend
 └── README.md
 ```
 
