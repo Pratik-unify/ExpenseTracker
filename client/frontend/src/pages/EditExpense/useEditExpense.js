@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-// Local helper to format ISO dates for input fields (No separate utils folder/files)
 const formatDateForInput = (isoString) => {
   if (!isoString) return "";
   return isoString.split("T")[0];
@@ -14,6 +13,18 @@ export default function useEditExpense() {
   const { id } = useParams();
   const [formData, setFormData] = useState({ name: "", amount: "", type: "Food", date: "" });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const handleAmountChange = (e) => {
+    const val = e.target.value;
+    const regex = /^\d*\.?\d*$/;
+    if (!regex.test(val)) {
+      setError("Only positive numbers are allowed");
+      return;
+    }
+    setError("");
+    setFormData({ ...formData, amount: val });
+  };
 
   useEffect(() => {
     const fetchSingleExpense = async () => {
@@ -22,10 +33,10 @@ export default function useEditExpense() {
         if (!response.ok) {
           throw new Error("Failed to fetch specific item");
         }
-        
+
         const data = await response.json();
-        const formattedDate = formatDateForInput(data.date); 
-        
+        const formattedDate = formatDateForInput(data.date);
+
         setFormData({
           name: data.name,
           amount: data.amount,
@@ -54,7 +65,7 @@ export default function useEditExpense() {
       if (!response.ok) {
         throw new Error("Failed to update");
       }
-      
+
       navigate("/");
     } catch (error) {
       alert("Failed to update.");
@@ -65,6 +76,8 @@ export default function useEditExpense() {
     formData,
     setFormData,
     loading,
-    handleSubmit
+    error,
+    handleSubmit,
+    handleAmountChange
   };
 }

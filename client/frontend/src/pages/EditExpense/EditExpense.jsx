@@ -3,7 +3,7 @@ import useEditExpense from "./useEditExpense";
 
 export default function EditExpense() {
   const navigate = useNavigate();
-  const { formData, setFormData, loading, handleSubmit } = useEditExpense();
+  const { formData, setFormData, loading, error, handleSubmit, handleAmountChange } = useEditExpense();
 
   if (loading) {
     return <div className="text-sm font-semibold text-brand-muted py-8 text-center">Loading details...</div>;
@@ -37,13 +37,13 @@ export default function EditExpense() {
         <div className="flex flex-col">
           <label className="text-xs font-bold text-brand-ink mb-1">Amount</label>
           <input 
-            type="number" 
-            step="0.01" 
+            type="text" 
+            inputMode="decimal"
             value={formData.amount} 
             required 
             placeholder="0.00"
             className="w-full border border-brand-border rounded-md px-3 py-1.5 bg-brand-card text-brand-ink text-sm font-medium focus:outline-hidden focus:ring-1 focus:ring-brand-accent focus:border-brand-accent"
-            onChange={(e) => setFormData({...formData, amount: e.target.value})} 
+            onChange={handleAmountChange} 
           />
         </div>
 
@@ -71,6 +71,12 @@ export default function EditExpense() {
             onChange={(e) => setFormData({...formData, date: e.target.value})} 
           />
         </div>
+
+        {error && (
+          <div className="text-xs font-bold text-[#b4452f] text-center mt-1">
+            {error}
+          </div>
+        )}
 
         <button 
           type="submit" 

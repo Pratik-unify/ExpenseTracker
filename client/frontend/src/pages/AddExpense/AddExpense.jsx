@@ -3,7 +3,7 @@ import useAddExpense from "./useAddExpense";
 
 export default function AddExpense() {
   const navigate = useNavigate();
-  const { formData, setFormData, error, handleSubmit } = useAddExpense();
+  const { formData, setFormData, error, handleSubmit, handleAmountChange } = useAddExpense();
 
   return (
     <div className="bg-brand-card border border-brand-border rounded-lg p-5">
@@ -32,12 +32,12 @@ export default function AddExpense() {
         <div className="flex flex-col">
           <label className="text-xs font-bold text-brand-ink mb-1">Amount</label>
           <input 
-            type="number" 
-            step="0.01" 
+            type="text" 
+            inputMode="decimal"
             required 
             placeholder="0.00"
             className="w-full border border-brand-border rounded-md px-3 py-1.5 bg-brand-card text-brand-ink text-sm font-medium focus:outline-hidden focus:ring-1 focus:ring-brand-accent focus:border-brand-accent"
-            onChange={(e) => setFormData({...formData, amount: e.target.value})} 
+            onChange={handleAmountChange} 
           />
         </div>
 

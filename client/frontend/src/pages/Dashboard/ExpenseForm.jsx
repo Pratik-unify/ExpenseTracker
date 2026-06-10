@@ -16,6 +16,17 @@ export default function ExpenseForm({ nameInputRef, onSave }) {
   const [date, setDate] = useState("");
   const [error, setError] = useState("");
 
+  const handleAmountChange = (e) => {
+    const val = e.target.value;
+    const regex = /^\d*\.?\d*$/;
+    if (!regex.test(val)) {
+      setError("Only positive numbers are allowed");
+      return;
+    }
+    setError("");
+    setAmount(val);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -69,13 +80,13 @@ export default function ExpenseForm({ nameInputRef, onSave }) {
           <div className="flex flex-col">
             <label className="font-mono text-[9.5px] font-semibold tracking-[0.6px] uppercase text-brand-muted mb-1.5">Amount</label>
             <input
-              type="number"
-              step="0.01"
+              type="text"
+              inputMode="decimal"
               value={amount}
               required
               placeholder="0.00"
               className="w-full border border-brand-border rounded-[7px] px-[11px] py-[9px] text-[13px] text-brand-ink bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent transition-all font-medium"
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={handleAmountChange}
             />
           </div>
 

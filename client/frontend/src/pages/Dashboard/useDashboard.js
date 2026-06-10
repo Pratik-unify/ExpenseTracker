@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-// API Helpers (No separate utils folder/files)
 const getExpenses = async () => {
   const response = await fetch(`${API_URL}/expenses`);
   if (!response.ok) throw new Error("Failed to fetch data");

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-// Local Validation helper (No separate utils folder/files)
 const isFutureDate = (dateString) => {
   if (!dateString) return false;
   const selectedDate = new Date(dateString);
@@ -18,11 +17,21 @@ export default function useAddExpense() {
   const [formData, setFormData] = useState({ name: "", amount: "", type: "Food", date: "" });
   const [error, setError] = useState("");
 
+  const handleAmountChange = (e) => {
+    const val = e.target.value;
+    const regex = /^\d*\.?\d*$/;
+    if (!regex.test(val)) {
+      setError("Only positive numbers are allowed");
+      return;
+    }
+    setError("");
+    setFormData({ ...formData, amount: val });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    // Validate future date
     if (isFutureDate(formData.date)) {
       setError("Cannot add a future date");
       return;
@@ -51,6 +60,7 @@ export default function useAddExpense() {
     formData,
     setFormData,
     error,
-    handleSubmit
+    handleSubmit,
+    handleAmountChange
   };
 }
