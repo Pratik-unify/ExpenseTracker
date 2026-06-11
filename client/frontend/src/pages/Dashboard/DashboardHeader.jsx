@@ -9,7 +9,7 @@ export default function DashboardHeader({ onAddClick }) {
       </div>
       <button
         onClick={onAddClick}
-        className="font-mono text-[13px] font-semibold text-white bg-[#2f6f4f] hover:bg-opacity-95 px-[17px] py-[11px] rounded-[7px] cursor-pointer transition-all active:scale-[0.98]"
+        className="font-mono text-[13px] font-semibold text-white bg-[#2f6f4f] hover:bg-opacity-0.2 px-[17px] py-[11px] rounded-[7px] cursor-pointer transition-all "
       >
         + Add expense
       </button>

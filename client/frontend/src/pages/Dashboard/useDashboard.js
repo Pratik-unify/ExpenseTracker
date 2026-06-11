@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -31,7 +31,16 @@ const createExpense = async (payload) => {
 export default function useDashboard() {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const nameInputRef = useRef(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredExpenses = useMemo(() => {
+    if (!searchTerm.trim()) return expenses;
+    const lowerSearch = searchTerm.trim().toLowerCase();
+    return expenses.filter(item => 
+      item.name.toLowerCase().includes(lowerSearch) ||
+      item.type.toLowerCase().includes(lowerSearch)
+    );
+  }, [expenses, searchTerm]);
 
   const fetchExpenses = useCallback(async (showSkeleton = false) => {
     if (showSkeleton) {
@@ -61,25 +70,6 @@ export default function useDashboard() {
       }
     }
   }, [fetchExpenses]);
-
-  const handleAddSubmit = useCallback(async (payload) => {
-    try {
-      await createExpense(payload);
-      fetchExpenses();
-      return true;
-    } catch (error) {
-      console.error(error);
-      alert("Failed to save expense.");
-      return false;
-    }
-  }, [fetchExpenses]);
-
-  const handleAddClick = useCallback(() => {
-    if (nameInputRef.current) {
-      nameInputRef.current.focus();
-      nameInputRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, []);
 
   const stats = useMemo(() => {
     const totalSpent = expenses.reduce((sum, item) => sum + Number(item.amount), 0);
@@ -124,11 +114,11 @@ export default function useDashboard() {
 
   return {
     expenses,
+    filteredExpenses,
     loading,
-    nameInputRef,
     handleDelete,
-    handleAddSubmit,
-    handleAddClick,
-    stats
+    stats,
+    searchTerm,
+    setSearchTerm
   };
 }

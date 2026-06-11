@@ -1,3 +1,4 @@
+import SearchBar from "../Dashboard/SearchBar";
 const formatRupees = (val) => {
   return "₹" + Number(val).toLocaleString("en-IN", {
     minimumFractionDigits: 2,
@@ -22,7 +23,7 @@ const getChipStyle = (type) => {
   return "bg-[#7a766c]/10 text-[#7a766c]";
 };
 
-export default function ExpenseList({ loading, expenses, onEdit, onDelete }) {
+export default function ExpenseList({ loading, expenses, onEdit, onDelete, searchTerm, setSearchTerm }) {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -33,7 +34,7 @@ export default function ExpenseList({ loading, expenses, onEdit, onDelete }) {
           <span className="font-mono text-[11px] text-brand-muted">{expenses.length} expenses</span>
         )}
       </div>
-
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       {loading ? (
         <div className="space-y-2.5 animate-pulse">
           {[1, 2, 3].map((i) => (
