@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -16,60 +17,39 @@ const deleteExpense = async (id) => {
   return response.json();
 };
 
-const createExpense = async (payload) => {
-  const response = await fetch(`${API_URL}/expenses`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-  });
-  if (!response.ok) throw new Error("Failed to save");
-  return response.json();
-};
-
 export default function useDashboard() {
-  const [expenses, setExpenses] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
+
+  const { data: expenses = [], isLoading: loading } = useQuery({
+    queryKey: ["expenses"],
+    queryFn: getExpenses
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteExpense,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["expenses"] });
+    },
+    onError: () => {
+      alert("Could not delete item.");
+    }
+  });
+
+  const handleDelete = useCallback((id) => {
+    if (window.confirm("Are you sure you want to delete this?")) {
+      deleteMutation.mutate(id);
+    }
+  }, [deleteMutation]);
 
   const filteredExpenses = useMemo(() => {
     if (!searchTerm.trim()) return expenses;
-    const lowerSearch = searchTerm.trim().toLowerCase();
-    return expenses.filter(item => 
+    const lowerSearch = searchTerm.toLowerCase();
+    return expenses.filter(item =>
       item.name.toLowerCase().includes(lowerSearch) ||
       item.type.toLowerCase().includes(lowerSearch)
     );
   }, [expenses, searchTerm]);
-
-  const fetchExpenses = useCallback(async (showSkeleton = false) => {
-    if (showSkeleton) {
-      setLoading(true);
-    }
-    try {
-      const data = await getExpenses();
-      setExpenses(data);
-    } catch (error) {
-      console.error("Failed to fetch", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchExpenses(true);
-  }, [fetchExpenses]);
-
-  const handleDelete = useCallback(async (id) => {
-    if (window.confirm("Are you sure you want to delete this?")) {
-      try {
-        await deleteExpense(id);
-        fetchExpenses();
-      } catch (e) {
-        alert("Could not delete item.");
-      }
-    }
-  }, [fetchExpenses]);
 
   const stats = useMemo(() => {
     const totalSpent = expenses.reduce((sum, item) => sum + Number(item.amount), 0);
