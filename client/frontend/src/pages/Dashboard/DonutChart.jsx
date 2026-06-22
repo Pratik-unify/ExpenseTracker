@@ -37,7 +37,7 @@ export default function DonutChart({
 
   return slices.map((slice, index) => (
     <circle
-      key={index}
+      // key={index}
       cx="19"
       cy="19"
       r="15.91549430918954"

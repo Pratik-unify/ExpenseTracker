@@ -65,7 +65,6 @@ export default function StatsOverview({
         <span className="font-mono text-[11px] text-brand-muted">across {expenses.length} expenses</span>
       </div>
 
-      {/* Monthly Budget */}
       <div className="bg-brand-card border border-brand-border/60 rounded-[9px] p-5 flex flex-col justify-between min-h-[120px] shadow-xs">
         <span className="font-mono text-[10.5px] uppercase tracking-[0.8px] text-brand-muted">This Month</span>
         <h2 className="font-sans text-[30px] font-bold text-[#1a1c22] tracking-[-1px] leading-tight mt-1.5">
@@ -84,7 +83,7 @@ export default function StatsOverview({
         </div>
       </div>
 
-      {/* Category Breakdowns */}
+{/* Category Breakdowns */}
       <div className="bg-brand-card border border-brand-border/60 rounded-[9px] p-5 flex flex-col justify-between min-h-[120px] shadow-xs">
         <span className="font-mono text-[10.5px] uppercase tracking-[0.8px] text-brand-muted mb-2">By Category</span>
         <div className="flex items-center gap-4">

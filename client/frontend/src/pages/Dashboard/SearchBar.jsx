@@ -8,7 +8,7 @@ export default function SearchBar({ searchTerm, setSearchTerm }) {
       </div>
       <input
         type="text"
-        placeholder="Search expenses..."
+        placeholder="Search expense or type..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full pl-9 pr-4 py-2 border border-brand-border/60 rounded-[8px] text-[13px] text-brand-ink bg-white focus:outline-none focus:ring-2 focus:ring-[#2f6f4f]/30 focus:border-[#2f6f4f] transition-all font-medium placeholder-brand-muted/70"

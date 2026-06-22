@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import SearchBar from "../Dashboard/SearchBar";
 const formatRupees = (val) => {
   return "₹" + Number(val).toLocaleString("en-IN", {
@@ -24,6 +25,22 @@ const getChipStyle = (type) => {
 };
 
 export default function ExpenseList({ loading, expenses, onEdit, onDelete, searchTerm, setSearchTerm }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 5;
+
+  // Reset to first page when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const totalPages = Math.max(1, Math.ceil(expenses.length / ITEMS_PER_PAGE));
+  const activePage = Math.min(currentPage, totalPages);
+
+  const displayedExpenses = expenses.slice(
+    (activePage - 1) * ITEMS_PER_PAGE,
+    activePage * ITEMS_PER_PAGE
+  );
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -66,7 +83,7 @@ export default function ExpenseList({ loading, expenses, onEdit, onDelete, searc
         </div>
       ) : (
         <div className="space-y-2.5">
-          {expenses.map((expense) => (
+          {displayedExpenses.map((expense) => (
             <div
               key={expense._id}
               className="bg-white border border-brand-border/85 rounded-[9px] p-[13px] sm:p-[14px] flex items-center justify-between shadow-xs transition-colors hover:border-[#2f6f4f]/30"
@@ -106,6 +123,28 @@ export default function ExpenseList({ loading, expenses, onEdit, onDelete, searc
               </div>
             </div>
           ))}
+
+          {totalPages > 1 && (
+            <div className="flex justify-between items-center mt-4 pt-4 border-t border-brand-border">
+              <button
+                disabled={activePage === 1}
+                onClick={() => setCurrentPage((prev) => prev - 1)}
+                className="font-mono text-xs border border-brand-border px-3 py-1 rounded-md text-brand-muted hover:text-brand-ink hover:border-brand-border transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              >
+                Previous
+              </button>
+              <span className="font-mono text-xs text-brand-muted">
+                Page {activePage} of {totalPages}
+              </span>
+              <button
+                disabled={activePage === totalPages}
+                onClick={() => setCurrentPage((prev) => prev + 1)}
+                className="font-mono text-xs border border-brand-border px-3 py-1 rounded-md text-brand-muted hover:text-brand-ink hover:border-brand-border transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
