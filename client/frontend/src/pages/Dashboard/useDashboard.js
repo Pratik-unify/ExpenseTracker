@@ -1,7 +1,11 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, createContext } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+// zustand can be used as an alternative to createContext -> helps with easier syntax as there is no boiler plate code 
+// zustand can help to prevent unnecessaary re renders of child components 
+export const DashboardContext = createContext();
 
 const getExpenses = async () => {
   const response = await fetch(`${API_URL}/expenses`);

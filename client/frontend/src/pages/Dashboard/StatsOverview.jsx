@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import DonutChart from "./DonutChart";
+import { DashboardContext } from "./useDashboard";
 
 const formatRupees = (val) => {
   return "₹" + Number(val).toLocaleString("en-IN", {
@@ -7,22 +9,23 @@ const formatRupees = (val) => {
   });
 };
 
-export default function StatsOverview({
-  loading,
-  expenses,
-  totalSpent,
-  thisMonthSpent,
-  budget,
-  percentUsed,
-  foodSpent,
-  billsSpent,
-  travelSpent,
-  otherSpent,
-  foodPct,
-  billsPct,
-  travelPct,
-  otherPct
-}) {
+export default function StatsOverview() {
+  const { loading, expenses, stats } = useContext(DashboardContext);
+  const {
+    totalSpent,
+    thisMonthSpent,
+    budget,
+    percentUsed,
+    foodSpent,
+    billsSpent,
+    travelSpent,
+    otherSpent,
+    foodPct,
+    billsPct,
+    travelPct,
+    otherPct
+  } = stats || {};
+
   if (loading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-pulse">
@@ -72,8 +75,8 @@ export default function StatsOverview({
         </h2>
         <div>
           <div className="w-full bg-[#efece4] h-[7px] rounded-full overflow-hidden mt-3">
-            <div 
-              className="bg-[#2f6f4f] h-full rounded-full transition-all duration-500" 
+            <div
+              className="bg-[#2f6f4f] h-full rounded-full transition-all duration-500"
               style={{ width: `${percentUsed}%` }}
             />
           </div>
@@ -83,23 +86,13 @@ export default function StatsOverview({
         </div>
       </div>
 
-{/* Category Breakdowns */}
+      {/* Category Breakdowns */}
       <div className="bg-brand-card border border-brand-border/60 rounded-[9px] p-5 flex flex-col justify-between min-h-[120px] shadow-xs">
         <span className="font-mono text-[10.5px] uppercase tracking-[0.8px] text-brand-muted mb-2">By Category</span>
         <div className="flex items-center gap-4">
           <div className="relative w-[74px] h-[74px] shrink-0">
             <svg viewBox="0 0 38 38" className="w-[74px] h-[74px] p-2 rotate-[-90deg]">
-              <DonutChart
-                expenses={expenses}
-                foodSpent={foodSpent}
-                billsSpent={billsSpent}
-                travelSpent={travelSpent}
-                otherSpent={otherSpent}
-                foodPct={foodPct}
-                billsPct={billsPct}
-                travelPct={travelPct}
-                otherPct={otherPct}
-              />
+              <DonutChart />
             </svg>
           </div>
           <div className="flex-1 space-y-1">

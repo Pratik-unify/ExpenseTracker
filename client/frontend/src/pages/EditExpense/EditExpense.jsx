@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import useEditExpense from "./useEditExpense";
-
+// could have been made more reausable by passing prop from dashboard into add expense itself abuout whether we want to add or edit expense 
 export default function EditExpense() {
   const navigate = useNavigate();
   const { formData, setFormData, loading, error, handleSubmit, handleAmountChange } = useEditExpense();
@@ -8,7 +8,7 @@ export default function EditExpense() {
   if (loading) {
     return <div className="text-sm font-semibold text-brand-muted py-8 text-center">Loading details...</div>;
   }
-  
+
   return (
     <div className="max-w-md mx-auto bg-brand-card border border-brand-border/60 rounded-[9px] p-6 shadow-xs">
       <div className="flex justify-between items-center border-b border-brand-border pb-3.5 mb-5">

@@ -1,5 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import SearchBar from "../Dashboard/SearchBar";
+import { DashboardContext } from "./useDashboard";
+
+// this function formats the number to Indian Rupees format with commas and two decimal places
 const formatRupees = (val) => {
   return "₹" + Number(val).toLocaleString("en-IN", {
     minimumFractionDigits: 2,
@@ -7,11 +11,14 @@ const formatRupees = (val) => {
   });
 };
 
+// this function formats the date to a more readable format like "Jan 01, 2023"
+
 const formatDate = (dateString) => {
   if (!dateString) return "";
   const date = new Date(dateString);
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const month = months[date.getMonth()];
+  // padStart is used to ensure that the day is always two digits 
   const day = String(date.getDate()).padStart(2, '0');
   const year = date.getFullYear();
   return `${month} ${day}, ${year}`;
@@ -24,18 +31,22 @@ const getChipStyle = (type) => {
   return "bg-[#7a766c]/10 text-[#7a766c]";
 };
 
-export default function ExpenseList({ loading, expenses, onEdit, onDelete, searchTerm, setSearchTerm }) {
+export default function ExpenseList() {
+  const navigate = useNavigate();
+  const { loading, filteredExpenses: expenses, handleDelete: onDelete, searchTerm } = useContext(DashboardContext);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 5;
 
-  // Reset to first page when search changes
+  // Reset to first page when search changes , as we want to show only the searched items so they come on the first page 
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
 
+  // pagination has been applied only on the client side , taken all the expenses and just sliced the expense array to display required items 
   const totalPages = Math.max(1, Math.ceil(expenses.length / ITEMS_PER_PAGE));
   const activePage = Math.min(currentPage, totalPages);
 
+  // display current page items
   const displayedExpenses = expenses.slice(
     (activePage - 1) * ITEMS_PER_PAGE,
     activePage * ITEMS_PER_PAGE
@@ -51,7 +62,8 @@ export default function ExpenseList({ loading, expenses, onEdit, onDelete, searc
           <span className="font-mono text-[11px] text-brand-muted">{expenses.length} expenses</span>
         )}
       </div>
-      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      {/* different ui for loading state  */}
+      <SearchBar />
       {loading ? (
         <div className="space-y-2.5 animate-pulse">
           {[1, 2, 3].map((i) => (
@@ -108,7 +120,7 @@ export default function ExpenseList({ loading, expenses, onEdit, onDelete, searc
                 </div>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => onEdit(expense._id)}
+                    onClick={() => navigate(`/edit/${expense._id}`)}
                     className="font-mono text-[11px] border border-brand-border px-[9px] py-[5px] rounded-[6px] text-brand-muted hover:text-brand-ink hover:border-brand-border transition-colors cursor-pointer"
                   >
                     Edit
@@ -123,10 +135,11 @@ export default function ExpenseList({ loading, expenses, onEdit, onDelete, searc
               </div>
             </div>
           ))}
-
+          {/* next and prev buttons only come when there are multiple pages */}
           {totalPages > 1 && (
             <div className="flex justify-between items-center mt-4 pt-4 border-t border-brand-border">
               <button
+                // if we are on the first page , we cannot go to previous page so disable the button
                 disabled={activePage === 1}
                 onClick={() => setCurrentPage((prev) => prev - 1)}
                 className="font-mono text-xs border border-brand-border px-3 py-1 rounded-md text-brand-muted hover:text-brand-ink hover:border-brand-border transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
@@ -137,6 +150,7 @@ export default function ExpenseList({ loading, expenses, onEdit, onDelete, searc
                 Page {activePage} of {totalPages}
               </span>
               <button
+                // if we are on the last page , we cannot go to next page so disable the button
                 disabled={activePage === totalPages}
                 onClick={() => setCurrentPage((prev) => prev + 1)}
                 className="font-mono text-xs border border-brand-border px-3 py-1 rounded-md text-brand-muted hover:text-brand-ink hover:border-brand-border transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"

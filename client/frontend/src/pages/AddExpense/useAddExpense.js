@@ -4,6 +4,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
+// useMutation is used for this 
+//  We cannot use useQuery here because this is a post operation 
 const createExpense = async (payload) => {
   const response = await fetch(`${API_URL}/expenses`, {
     method: "POST",
@@ -16,6 +18,7 @@ const createExpense = async (payload) => {
   return response.json();
 };
 
+// to check if the date is in future , expense cant be added 
 const isFutureDate = (dateString) => {
   if (!dateString) return false;
   const selectedDate = new Date(dateString);
@@ -34,6 +37,8 @@ export default function useAddExpense() {
   const addMutation = useMutation({
     mutationFn: createExpense,
     onSuccess: () => {
+      // refetchQueries triggers a network call to the server immediately , even if the user is on a different page and cannot see the data 
+      // invalidateQueries  waits until the user actually opens the page that needs the data before making the network request
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
       navigate("/");
     },
@@ -42,6 +47,8 @@ export default function useAddExpense() {
     }
   });
 
+  // We did not wrap this in useCallback because it is passed to a native <input> element
+  // Native tags do not trigger React rendering cycles, so caching the reference yields no performance gain
   const handleAmountChange = (e) => {
     const val = e.target.value;
     const regex = /^\d*\.?\d*$/;
@@ -76,3 +83,4 @@ export default function useAddExpense() {
     handleAmountChange
   };
 }
+

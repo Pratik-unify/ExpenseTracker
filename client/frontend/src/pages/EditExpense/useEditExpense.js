@@ -44,6 +44,7 @@ export default function useEditExpense() {
     mutationFn: updateExpense,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
+      // also reload that specific expense which has changed 
       queryClient.invalidateQueries({ queryKey: ["expense", id] });
       navigate("/");
     },
