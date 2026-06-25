@@ -20,7 +20,8 @@ const deleteExpense = async (id) => {
   if (!response.ok) throw new Error("Failed to delete");
   return response.json();
 };
-
+// query client is the central store , whereas use query is the hook used to fetch data from the store 
+// react query prevents unnecessary re renders by caching the values and then rendering only when the expense list changes saves computation 
 export default function useDashboard() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");

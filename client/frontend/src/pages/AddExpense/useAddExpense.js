@@ -5,7 +5,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 // useMutation is used for this 
-//  We cannot use useQuery here because this is a post operation 
 const createExpense = async (payload) => {
   const response = await fetch(`${API_URL}/expenses`, {
     method: "POST",
@@ -33,12 +32,14 @@ export default function useAddExpense() {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({ name: "", amount: "", type: "Food", date: "" });
   const [error, setError] = useState("");
-
+  // we can fetch the newly added data directly into the expense array using queryClient.setQueryData()
   const addMutation = useMutation({
     mutationFn: createExpense,
     onSuccess: () => {
       // refetchQueries triggers a network call to the server immediately , even if the user is on a different page and cannot see the data 
       // invalidateQueries  waits until the user actually opens the page that needs the data before making the network request
+
+      // invalidate queries makes extra request to the server which is not efficient if data is already available in the client, in that case we should use queryClient.setQueryData()
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
       navigate("/");
     },
