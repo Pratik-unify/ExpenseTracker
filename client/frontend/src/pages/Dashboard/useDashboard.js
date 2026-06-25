@@ -30,7 +30,7 @@ export default function useDashboard() {
     queryFn: getExpenses
   });
 
-  const deleteMutation = useMutation({
+  const { mutate } = useMutation({
     mutationFn: deleteExpense,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
@@ -42,10 +42,11 @@ export default function useDashboard() {
 
   const handleDelete = useCallback((id) => {
     if (window.confirm("Are you sure you want to delete this?")) {
-      deleteMutation.mutate(id);
+      mutate(id);
     }
-  }, [deleteMutation]);
-
+  }, []);
+  // usee memo has been used here because we do not want to calculate eveything for every re render 
+  // caching the values and then rendering only when the expense list changes saves computation 
   const filteredExpenses = useMemo(() => {
     if (!searchTerm.trim()) return expenses;
     const lowerSearch = searchTerm.toLowerCase();

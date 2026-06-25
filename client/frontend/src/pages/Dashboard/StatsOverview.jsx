@@ -2,6 +2,7 @@ import { useContext } from "react";
 import DonutChart from "./DonutChart";
 import { DashboardContext } from "./useDashboard";
 
+// to conver the amt to standard Indian format containing 2 decimal places 
 const formatRupees = (val) => {
   return "₹" + Number(val).toLocaleString("en-IN", {
     minimumFractionDigits: 2,
@@ -91,12 +92,15 @@ export default function StatsOverview() {
         <span className="font-mono text-[10.5px] uppercase tracking-[0.8px] text-brand-muted mb-2">By Category</span>
         <div className="flex items-center gap-4">
           <div className="relative w-[74px] h-[74px] shrink-0">
+            {/* we rotate the entire coordinate grid to start at the top that is 12 o clock because by default it starts at 3 o clock  */}
             <svg viewBox="0 0 38 38" className="w-[74px] h-[74px] p-2 rotate-[-90deg]">
               <DonutChart />
             </svg>
           </div>
           <div className="flex-1 space-y-1">
+            {/* leading tight means that the lines will be very close to each other , closer than the by default values  */}
             <div className="flex items-center text-[12px] leading-tight">
+              {/* shring-0 ensures that the component does not shrink and  the content doesn't overflow */}
               <span className="w-[9px] h-[9px] rounded-sm bg-[#2f6f4f] mr-1.5 shrink-0" />
               <span className="font-sans text-brand-ink">Food</span>
               <span className="font-mono text-brand-muted ml-auto font-semibold">{formatRupees(foodSpent)}</span>

@@ -33,6 +33,7 @@ const getChipStyle = (type) => {
 
 export default function ExpenseList() {
   const navigate = useNavigate();
+  // used expenses for filtered expenses which I have got from the useDashboard hook to avoid re renders
   const { loading, filteredExpenses: expenses, handleDelete: onDelete, searchTerm } = useContext(DashboardContext);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 5;
@@ -51,7 +52,9 @@ export default function ExpenseList() {
     (activePage - 1) * ITEMS_PER_PAGE,
     activePage * ITEMS_PER_PAGE
   );
-
+  // major improvement , could have used React.memo here for every individual expense element in the list , this would contain key , expense , noEdit and ondelete as props 
+  // so when the parent comp re renders the children comp <expenseItem> would not be re rendered because its props will be same 
+  // using useCallback to wrap the handleDelete function to prevent its re creation on every render and hence prevent unnecessary re renders of the child component 
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
